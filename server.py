@@ -1,87 +1,67 @@
-# server.py
-import http.server
-import socketserver
-import json
-from urllib.parse import parse_qs
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from datetime import datetime
+import json
 import os
 
-PORT = 8000  # Render 上では PORT は環境変数で上書きされます
+app = Flask(__name__)
+CORS(app)  # 全サイトからのアクセスを許可（必要なら特定ドメインに絞ってください）
+
 SCHEDULE_FILE = "schedule.json"
 
-# schedule.json がなければ作成
+# 初期化
 if not os.path.exists(SCHEDULE_FILE):
     with open(SCHEDULE_FILE, "w", encoding="utf-8") as f:
         json.dump([], f, ensure_ascii=False, indent=2)
 
-class Handler(http.server.SimpleHTTPRequestHandler):
-    # POST リクエスト処理
-    def do_POST(self):
-        length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(length).decode()
-        data = parse_qs(body)
+@app.route("/schedule", methods=["GET"])
+def get_schedule():
+    with open(SCHEDULE_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return jsonify(data)
 
-        # 投稿処理
-        if self.path == "/schedule":
-            name = data.get("name", [""])[0].strip()
-            message = data.get("message", [""])[0].strip()
+@app.route("/schedule", methods=["POST"])
+def post_schedule():
+    name = request.form.get("name", "").strip()
+    message = request.form.get("message", "").strip()
+    checked = request.form.get("checked", "false").lower() == "true"
 
-            if name and message:
-                with open(SCHEDULE_FILE, "r", encoding="utf-8") as f:
-                    schedules = json.load(f)
+    if not name or not message:
+        return jsonify({"error": "invalid"}), 400
 
-                now = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    with open(SCHEDULE_FILE, "r", encoding="utf-8") as f:
+        schedules = json.load(f)
 
-                # 直前と同じ投稿を1秒以内に追加しない
-                if not schedules or not (
-                    schedules[-1]["name"] == name and schedules[-1]["message"] == message
-                ):
-                    schedules.append({"name": name, "message": message, "time": now, "checked": False})
-                    with open(SCHEDULE_FILE, "w", encoding="utf-8") as f:
-                        json.dump(schedules, f, ensure_ascii=False, indent=2)
+    now = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    schedules.append({"name": name, "message": message, "time": now, "checked": checked})
 
-            self.send_response(200)
-            self.send_header("Access-Control-Allow-Origin", "*")  # ← CORS 許可
-            self.end_headers()
-        
-        # チェックボックス更新
-        elif self.path == "/update_check":
-            index = int(data.get("index", ["-1"])[0])
-            checked = data.get("checked", ["false"])[0].lower() == "true"
+    with open(SCHEDULE_FILE, "w", encoding="utf-8") as f:
+        json.dump(schedules, f, ensure_ascii=False, indent=2)
 
-            with open(SCHEDULE_FILE, "r", encoding="utf-8") as f:
-                schedules = json.load(f)
+    return jsonify({"status": "ok"}), 200
 
-            if 0 <= index < len(schedules):
-                schedules[index]["checked"] = checked
-                with open(SCHEDULE_FILE, "w", encoding="utf-8") as f:
-                    json.dump(schedules, f, ensure_ascii=False, indent=2)
+@app.route("/check", methods=["POST"])
+def update_check():
+    # クライアントは index（行番号）を送る想定
+    try:
+        idx = int(request.form.get("index", -1))
+    except:
+        return jsonify({"error": "invalid index"}), 400
+    flag = request.form.get("checked", "false").lower() == "true"
 
-            self.send_response(200)
-            self.send_header("Access-Control-Allow-Origin", "*")  # ← CORS 許可
-            self.end_headers()
+    with open(SCHEDULE_FILE, "r", encoding="utf-8") as f:
+        schedules = json.load(f)
 
-        else:
-            self.send_error(404, "Not Found")
+    if 0 <= idx < len(schedules):
+        schedules[idx]["checked"] = flag
+        with open(SCHEDULE_FILE, "w", encoding="utf-8") as f:
+            json.dump(schedules, f, ensure_ascii=False, indent=2)
+        return jsonify({"status": "ok"})
+    return jsonify({"error": "index out of range"}), 400
 
-    # GET リクエスト処理
-    def do_GET(self):
-        if self.path.startswith("/schedule"):
-            if os.path.exists(SCHEDULE_FILE):
-                with open(SCHEDULE_FILE, "r", encoding="utf-8") as f:
-                    schedules = json.load(f)
-            else:
-                schedules = []
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Access-Control-Allow-Origin", "*")  # ← CORS 許可
-            self.end_headers()
-            self.wfile.write(json.dumps(schedules, ensure_ascii=False).encode("utf-8"))
-        else:
-            super().do_GET()
+@app.route("/")
+def root():
+    return "HBS schedule API running"
 
-# Render では PORT は環境変数で指定される
-port = int(os.environ.get("PORT", PORT))
-with socketserver.TCPServer(("", port), Handler) as httpd:
-    print(f"Serving at port {port}")
-    httpd.serve_forever()
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
