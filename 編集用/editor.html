@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>スケジュール入力</title>
+<style>
+body { font-family: sans-serif; margin: 40px; }
+input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+button { padding: 8px 16px; }
+</style>
+</head>
+<body>
+<h2>スケジュール掲示板 編集</h2>
+
+<label>名前：</label>
+<input id="name" type="text" placeholder="例：上原">
+
+<label>メッセージ：</label>
+<textarea id="message" rows="3" placeholder="伝えたい内容を入力してください"></textarea>
+
+<button onclick="saveMessage()">保存する</button>
+
+<script>
+function saveMessage() {
+  const name = document.getElementById('name').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  if (!name || !message) {
+    alert("名前とメッセージを入力してください。");
+    return;
+  }
+
+  // JSON形式でファイルに渡すデータを作成
+  const newData = { name, message, time: new Date().toLocaleString() };
+
+  // JSONを一時ファイルに保存する
+  const blob = new Blob([JSON.stringify(newData)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  // save_schedule.bat を呼び出して共有フォルダに反映
+  const shell = new ActiveXObject("WScript.Shell");
+  shell.Run(`save_schedule.bat "${name}" "${message}"`, 0, true);
+}
+</script>
+
+<p>※保存後はみんなの画面（index.html）にすぐ反映されます。</p>
+
+</body>
+</html>

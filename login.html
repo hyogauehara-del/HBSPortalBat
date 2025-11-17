@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>社内ポータル</title>
+  <!-- Tailwind CDN（簡易利用） -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 全体を少し大きめに */
+    html { font-size: 18px; }
+    /* ログインカードの最大幅を広めに */
+    .login-card { max-width: 520px; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-12">
+  <header class="w-full max-w-6xl px-6 mb-8">
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-semibold">社内ポータル</h1>
+      <nav class="text-sm text-slate-600">
+        <a href="https://uehara-awi.github.io/login-page/" target="_blank" rel="noopener" class="underline">GitHub Pages（uehara-awi）</a>
+      </nav>
+    </div>
+    <p class="mt-2 text-slate-500">社内向けアクセスと各種クラウド・リンク</p>
+  </header>
+
+  <main class="w-full max-w-6xl px-6 grid md:grid-cols-2 gap-8">
+    <!-- 左：ログイン -->
+    <section class="flex justify-center">
+      <div class="login-card w-full bg-white rounded-2xl shadow-lg p-8">
+        <!-- 需要開発チーム 表示（ログイン一行上） -->
+        <div class="text-center mb-4">
+          <div class="text-lg font-medium text-slate-700">需要開発チーム</div>
+        </div>
+
+        <h2 class="text-2xl font-semibold text-slate-800 text-center mb-6">ログイン</h2>
+
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label for="username" class="block text-sm font-medium text-slate-600 mb-1">ID・パスワードを入力する本格ログインフォーム</label>
+            <input id="username" name="username" type="text" required
+                   class="w-full rounded-md border px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="社員ID" />
+          </div>
+
+          <div>
+            <label for="password" class="sr-only">パスワード</label>
+            <input id="password" name="password" type="password" required
+                   class="w-full rounded-md border px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="パスワード" />
+          </div>
+
+          <!-- オプション：ワンタイムトークンや部署選択など -->
+          <div class="flex items-center justify-between text-sm text-slate-600">
+            <label class="inline-flex items-center">
+              <input type="checkbox" class="mr-2" /> 次回から自動でログイン
+            </label>
+            <a href="#" class="underline">パスワードを忘れた場合</a>
+          </div>
+
+          <div>
+            <button type="submit" class="w-full py-3 rounded-lg bg-sky-600 text-white text-lg font-medium hover:bg-sky-700">ログイン</button>
+          </div>
+
+          <!-- 新規登録リンクは削除済み（ユーザーの指示） -->
+        </form>
+
+        <p class="mt-4 text-center text-sm text-slate-500">問題がある場合は内線または IT 部門へ連絡してください。</p>
+      </div>
+    </section>
+
+    <!-- 右：クラウド一覧 -->
+    <section class="bg-white rounded-2xl shadow-lg p-6">
+      <h3 class="text-xl font-semibold mb-4">施工管理クラウド一覧</h3>
+
+      <div class="overflow-x-auto">
+        <table class="w-full table-auto text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-100">
+              <th class="px-4 py-3 text-sm font-medium text-slate-700">クラウド名</th>
+              <th class="px-4 py-3 text-sm font-medium text-slate-700">備考</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t">
+              <td class="px-4 py-3 align-top">ANDPAD</td>
+              <td class="px-4 py-3">ジョンソン・豊栄建設など</td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-4 py-3 align-top">現場Plus</td>
+              <td class="px-4 py-3">キクザワ・コスモ建設など</td>
+            </tr>
+
+            <!-- ここに続けて行を追加できます -->
+            <!-- 例:
+            <tr class="border-t">
+              <td class="px-4 py-3">クラウド名X</td>
+              <td class="px-4 py-3">備考や対応企業など</td>
+            </tr>
+            -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-6 text-sm text-slate-600">
+        ※ 表は続けて行を追加してください。CSVから自動生成する場合はご相談ください。
+      </div>
+    </section>
+
+    <!-- 下段（全幅）: 便利リンクやお知らせなど -->
+<section class="md:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+  <div class="flex items-start justify-between">
+    <div>
+      <h4 class="text-lg font-semibold mb-2">便利リンク</h4>
+      <ul class="space-y-1 text-slate-700">
+        <li><a href="https://airwatero365.sharepoint.com/" target="_blank" class="underline">AW Patio</a></li>
+        <li><a href="https://sa.wims.jp/bS6gtz/WP001Init.do?KAI_CODE=000207" target="_blank" class="underline">WiMS-Ⅱ PC打刻</a></li>
+        <li><a href="https://sa.wims.jp/bS6gtz/WA014Init.do?compUrl=di4kfl" target="_blank" class="underline">勤務管理表</a></li>
+      </ul>
+    </div>
+
+    <div class="max-w-sm">
+      <h4 class="text-lg font-semibold mb-2">お知らせ</h4>
+      <div class="text-sm text-slate-600">
+        本日はシステムメンテナンスは予定されていません。重要なお知らせは随時ここに表示されます。
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+
+  <footer class="w-full max-w-6xl px-6 mt-10 text-sm text-slate-500">
+    <div class="flex items-center justify-between py-4">
+      <div>© 2025 会社名</div>
+      <div>作成者: 上原（uehara-awi）</div>
+    </div>
+  </footer>
+
+  <script>
+    // 簡易ログイン送信処理（サンプル）
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const id = document.getElementById('username').value.trim();
+      // 実運用ではここで HTTPS 経由で認証 API に送ること
+      if(!id){
+        alert('IDを入力してください');
+        return;
+      }
+      alert('ログイン処理（ダミー）: ' + id);
+    });
+  </script>
+</body>
+</html>

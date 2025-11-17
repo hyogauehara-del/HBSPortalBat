@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBSポータルサイト</title>
+  <style>
+    body {
+      font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      margin: 0;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+    header {
+      background-color: #004b8d;
+      color: white;
+      padding: 15px 25px;
+      text-align: center;
+      font-size: 1.5em;
+      letter-spacing: 0.05em;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      padding: 25px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #004b8d;
+      border-bottom: 2px solid #004b8d;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #f0f3f6;
+    }
+    a {
+      color: #004b8d;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .links ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .links li {
+      margin: 6px 0;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #eaeaea;
+      font-size: 0.9em;
+      color: #666;
+    }
+    .chatbot-button {
+      display: inline-block;
+      background-color: #004b8d;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .chatbot-button:hover {
+      background-color: #0066cc;
+    }
+    #center-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: rgba(255, 255, 255, 0.7);
+      color: #007bff;
+      border: 3px solid #007bff;
+      border-radius: 16px;
+      padding: 30px 60px;
+      font-size: 1.5em;
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 99999;
+      box-shadow: 0 0 30px rgba(0,0,255,0.2);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    #center-popup.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    @media screen and (max-width: 800px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    需要開発チーム HBSポータルサイト
+  </header>
+
+  <main>
+    <!-- 左カラム -->
+    <div>
+      <section>
+        <h2>施工管理クラウド一覧</h2>
+        <table>
+          <thead>
+            <tr><th>クラウド名</th><th>備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="https://work.andpad.jp/" target="_blank">ANDPAD</a></td><td>ジョンソン・豊栄建設など</td></tr>
+            <tr><td><a href="https://apg.kensetsu-cloud.jp/main/dyapp/t/X4DD823/memberlogin" target="_blank">現場Plus</a></td><td>キクザワ・コスモ建設など</td></tr>
+            <tr><td><a href="https://sugoyama.com/partner/login/" target="_blank">すごいよ山下くん</a></td><td>アーキテック・高木商事など</td></tr>
+            <tr><td><a href="https://www.easyhousing.ne.jp/eh2_front/pc/classic/index_login.html" target="_blank">イージーハウジング</a></td><td>セキスイハイム</td></tr>
+            <tr><td><a href="https://ai-koumuten-paradais.com/AI_LOG0100" target="_blank">PaRADAiS</a></td><td>アイ工務店（施工業者管理）</td></tr>
+            <tr><td><a href="https://crafta.life/users/login/" target="_blank">クラフタ</a></td><td>マイダ工務店</td></tr>
+            <tr><td><a href="https://www.nacss.net/Nacss/Login/TermAuth?action=login" target="_blank">NACSS</a></td><td>住友林業</td></tr>
+            <tr><td><a href="https://ediap.ichijo.co.jp/pub/certlogin.cgi?sessid=fbe670505ce9e5dffb7fa27f743e73e5&back=https%3A%2F%2Fediap.ichijo.co.jp%2F" target="_blank">一条eサポートシステム</a></td><td>一条工務店</td></tr>
+            <tr><td><a href="https://ai-koumuten.jp" target="_blank">アイシス</a></td><td>アイ工務店</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>パスワード一覧</h2>
+        <table>
+          <thead>
+            <tr><th>クラウド名</th><th>ID / メールアドレス</th><th>パスワード</th><th>備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ANDPAD</td><td>yamakawa-ken@awi.co.jp</td><td>awi202304</td><td>ジョンソン・豊栄</td></tr>
+            <tr><td>ANDPAD</td><td>matsumura-sat@awi.co.jp</td><td>awi202304</td><td>全般</td></tr>
+            <tr><td>ANDPAD</td><td>nanbu-mas@awi.co.jp</td><td>awi202304</td><td>ロゴス</td></tr>
+            <tr><td>ANDPAD</td><td>nanao-hid@awi.co.jp</td><td>ecoa1234</td><td>エコア</td></tr>
+            <tr><td>ANDPAD</td><td>aoyama-yuu@awi.co.jp</td><td>awi8612kai</td><td>受発注等</td></tr>
+            <tr><td>現場Plus</td><td>nanao-hid@awi.cp.jp</td><td>nanao-8275</td><td>キクザワ・5104727</td></tr>
+            <tr><td>現場Plus</td><td>matsumura-sat@awi.cp.jp</td><td>cosmo-cloud2019</td><td>コスモ建設・5100415</td></tr>
+            <tr><td>現場Plus</td><td>matsumura-sat@awi.cp.jp</td><td>ai123@</td><td>アイ工務店・5108879</td></tr>
+            <tr><td>現場Plus</td><td>nanbu-mas@awi.cp.jp</td><td>ai123@</td><td>アイ工務店・5108879</td></tr>
+            <tr><td>すごいよ山下くん</td><td>matsumura-sat@awi.co.jp</td><td>Sato0713</td><td>アーキ・高木商事</td></tr>
+            <tr><td>すごいよ山下くん</td><td>hyoga.uehara@awi.co.jp</td><td>uehara11739</td><td>全般</td></tr>
+            <tr><td>イージーハウジング</td><td>0001</td><td>328300</td><td>セキスイ・会社コードGA4490N00001</td></tr>
+            <tr><td>PaRADAiS</td><td>9000332</td><td>85986000</td><td>アイ工務店（施工業者管理）</td></tr>
+            <tr><td>クラフタ</td><td>080-6076-2182 / matsumura-sat@awi.co.jp</td><td>ｼｮｰﾄﾒｰﾙ通知</td><td>マイダ工務店</td></tr>
+            <tr><td>NACSS</td><td>NA0135584</td><td>AW1075</td><td>住友林業</td></tr>
+            <tr><td>一条eサポートシステム</td><td>業者コード：0251005001</td><td>wzu46</td><td>一条工務店</td></tr>
+            <tr><td>アイシス</td><td>AI122337</td><td>X47s#j18UG</td><td>アイ工務店</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>お知らせ</h2>
+        <ul>
+          <li>2025/10/28 社内ポータル試験運用を開始しました。</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- 右カラム -->
+    <aside class="links">
+      <section>
+        <h2>便利リンク</h2>
+        <ul>
+          <li><a href="https://airwatero365.sharepoint.com/" target="_blank">AW Patio</a></li>
+          <li><a href="https://sa.wims.jp/bS6gtz/WP001Init.do?KAI_CODE=000207" target="_blank">WiMS-Ⅱ PC打刻</a></li>
+          <li><a href="https://sa.wims.jp/bS6gtz/WA014Init.do?compUrl=di4kfl" target="_blank">勤務管理表</a></li>
+          <li><a href="http://positive.awi.local/LG/" target="_blank">人事・給与システム</a></li>
+          <li><a href="https://airwatero365.sharepoint.com/sites/awh-portal/DocLib/Forms/AllItems.aspx?id=%2Fsites%2Fawh%2Dportal%2FDocLib%2F%E8%AA%BF%E9%81%94%E9%83%A8%2F%E5%95%86%E5%93%81%E4%BE%A1%E6%A0%BC%E8%A1%A8%2F%EF%BC%92%EF%BC%90%EF%BC%92%EF%BC%95%E5%B9%B4%E5%BA%A6%E3%80%80%E5%95%86%E5%93%81%E4%BE%A1%E6%A0%BC%E8%A1%A8&viewid=dcd6464e%2D8db6%2D4d76%2D929e%2D941212b22e78" target="_blank">25年度 商品価格表</a></li>
+        </ul>
+      </section>
+
+      <section id="schedule-section">
+        <h2>スケジュール</h2>
+        <div id="schedule-board">読み込み中...</div>
+
+        <form id="schedule-form" style="margin-top:10px;">
+          <input type="text" id="name" placeholder="名前" required style="width:20%;padding:5px;">
+          <input type="text" id="message" placeholder="メッセージを入力" required style="width:50%;padding:5px;">
+          <button type="submit" style="padding:5px 10px;">投稿</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>簡易カレンダー</h2>
+        <div id="calendar"></div>
+      </section>
+
+      <section class="bg-white rounded-2xl shadow p-6 text-center">
+        <h2 class="text-lg font-semibold mb-2">お問い合わせ</h2>
+        <p class="text-slate-700">
+          ポータルサイトの変更・追加希望は<br>
+          <a href="mailto:hyoga.uehera@awi.co.jp" class="text-blue-600 underline">hyoga.uehera@awi.co.jp</a><br>
+          までお問い合わせください。
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <footer>
+    © Air Water Life Solution Co., Ltd. All Rights Reserved.
+  </footer>
+  <!-- === 中央ポップアップ要素 === -->
+  <div id="center-popup">メッセージが投稿されました。</div>
+
+  <script>
+/* ===== スケジュール掲示板 ===== */
+let isSubmitting = false; // 二重送信防止
+
+async function loadSchedule() {
+  try {
+    const res = await fetch("/schedule?_=" + Date.now());
+    const data = await res.json();
+    const html = data
+      .map(
+        (d, i) =>
+          `<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ccc;padding:4px 0;">
+            <div>
+              <strong>${d.name}</strong>：${d.message}
+              <span style="color:gray;font-size:0.8em;">(${d.time})</span>
+            </div>
+            <div>
+              <label>
+                <input type="checkbox" data-index="${i}" ${d.checked ? "checked" : ""}>
+                完了
+              </label>
+            </div>
+          </div>`
+      )
+      .join("");
+    document.getElementById("schedule-board").innerHTML =
+      html || "投稿はまだありません。";
+
+    // チェックボックスにイベント付与
+    document.querySelectorAll('input[type="checkbox"][data-index]').forEach((cb) => {
+      cb.addEventListener("change", async (e) => {
+        const index = e.target.dataset.index;
+        const checked = e.target.checked;
+        await fetch("/update_check", {
+          method: "POST",
+          body: new URLSearchParams({ index, checked })
+        });
+      });
+    });
+  } catch {
+    document.getElementById("schedule-board").innerHTML =
+      "データの読み込みに失敗しました。";
+  }
+}
+
+/* ===== ポップアップメッセージ ===== */
+const msgBox = document.createElement("div");
+Object.assign(msgBox.style, {
+  position: "fixed",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  padding: "20px 30px",
+  fontSize: "1.3em",
+  color: "#007bff",
+  border: "3px solid #007bff",
+  borderRadius: "12px",
+  backgroundColor: "rgba(255,255,255,0.8)",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+  zIndex: "10000",
+  display: "none",
+  textAlign: "center"
+});
+document.body.appendChild(msgBox);
+
+function showMessage(msg, duration = 1800) {
+  msgBox.textContent = msg;
+  msgBox.style.display = "block";
+  setTimeout(() => (msgBox.style.display = "none"), duration);
+}
+
+/* ===== 投稿イベント ===== */
+document.getElementById("schedule-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (isSubmitting) return;
+  isSubmitting = true;
+
+  const name = document.getElementById("name").value.trim();
+  const message = document.getElementById("message").value.trim();
+  if (!name || !message) {
+    showMessage("すべて入力してください");
+    isSubmitting = false;
+    return;
+  }
+
+  try {
+    await fetch("/schedule", {
+      method: "POST",
+      body: new URLSearchParams({ name, message })
+    });
+    document.getElementById("name").value = "";
+    document.getElementById("message").value = "";
+    showMessage("メッセージが投稿されました。");
+    await loadSchedule();
+  } catch (err) {
+    console.error(err);
+    showMessage("投稿に失敗しました");
+  } finally {
+    isSubmitting = false;
+  }
+});
+
+/* ===== 定期更新 ===== */
+loadSchedule();
+setInterval(loadSchedule, 3000);
+
+/* ===== カレンダー生成 ===== */
+function getHolidays(year) {
+  const holidays = [
+    `${year}/1/1`, `${year}/2/11`, `${year}/2/23`, `${year}/4/29`,
+    `${year}/5/3`, `${year}/5/4`, `${year}/5/5`, `${year}/8/11`,
+    `${year}/11/3`, `${year}/11/23`
+  ];
+  const spring = Math.floor(20.8431 + 0.242194*(year-1980)) - Math.floor((year-1980)/4);
+  const autumn = Math.floor(23.2488 + 0.242194*(year-1980)) - Math.floor((year-1980)/4);
+  holidays.push(`${year}/3/${spring}`, `${year}/9/${autumn}`);
+  function nthMonday(month,nth){
+    let d=new Date(year,month-1,1);
+    while(d.getDay()!==1)d.setDate(d.getDate()+1);
+    d.setDate(d.getDate()+7*(nth-1));
+    return `${year}/${month}/${d.getDate()}`;
+  }
+  holidays.push(nthMonday(1,2), nthMonday(7,3), nthMonday(9,3), nthMonday(10,2));
+  return holidays;
+}
+
+function generateCalendar(){
+  const today=new Date();
+  const year=today.getFullYear();
+  const month=today.getMonth();
+  const firstDay=new Date(year,month,1);
+  const lastDay=new Date(year,month+1,0);
+  const weeks=["日","月","火","水","木","金","土"];
+  const holidays=getHolidays(year).map(h=>h.replace(`${year}/`,""));
+  let html=`<table style="width:100%;border-collapse:collapse;text-align:center;font-size:0.9em;">
+            <caption style="font-weight:bold;font-size:1em;margin-bottom:5px;">${year}年 ${month+1}月</caption>
+            <thead><tr>${weeks.map(d=>`<th style='padding:4px;border-bottom:1px solid #ccc;'>${d}</th>`).join('')}</tr></thead><tbody>`;
+  let date=1;
+  for(let i=0;i<6;i++){
+    html+="<tr>";
+    for(let j=0;j<7;j++){
+      const current=new Date(year,month,date);
+      const day=current.getDate();
+      const key=`${month+1}/${day}`;
+      if(i===0&&j<firstDay.getDay()){html+="<td></td>";}
+      else if(date>lastDay.getDate()){html+="<td></td>";}
+      else{
+        let color="#333";
+        if(j===0||holidays.includes(key))color="red";
+        if(j===6)color="#007bff";
+        let bg=(day===today.getDate())?"#004b8d":"transparent";
+        let textColor=(day===today.getDate())?"white":color;
+        html+=`<td style='padding:6px;border-radius:6px;color:${textColor};background:${bg};'>${day}</td>`;
+        date++;
+      }
+    }
+    html+="</tr>";
+    if(date>lastDay.getDate())break;
+  }
+  html+="</tbody></table>";
+  document.getElementById("calendar").innerHTML=html;
+}
+generateCalendar();
+</script>
+
+</body>
+</html>
