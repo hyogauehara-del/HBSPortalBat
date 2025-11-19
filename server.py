@@ -1,12 +1,13 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from datetime import datetime
 import json
 import os
 
 app = Flask(__name__)
+CORS(app)  # 必要なら特定ドメインだけに制限できます
 
 SCHEDULE_FILE = "schedule.json"
-
 
 # --- 初期ファイル作成 ---
 if not os.path.exists(SCHEDULE_FILE):
@@ -42,6 +43,7 @@ def get_schedule():
 def add_schedule():
     name = request.form.get("name", "").strip()
     message = request.form.get("message", "").strip()
+    checked = request.form.get("checked", "false").lower() == "true"
 
     if not name or not message:
         return jsonify({"error": "invalid"}), 400
@@ -51,7 +53,7 @@ def add_schedule():
         "name": name,
         "message": message,
         "time": datetime.now().strftime("%Y/%m/%d %H:%M"),
-        "checked": False,
+        "checked": checked,
     })
 
     save_schedule(data)
@@ -61,15 +63,20 @@ def add_schedule():
 # --- API: チェック更新 ---
 @app.route("/update_check", methods=["POST"])
 def update_check():
-    index = int(request.form.get("index", -1))
-    checked = request.form.get("checked") == "true"
+    try:
+        index = int(request.form.get("index", -1))
+    except:
+        return jsonify({"error": "invalid index"}), 400
+
+    checked = request.form.get("checked", "false").lower() == "true"
 
     data = load_schedule()
     if 0 <= index < len(data):
         data[index]["checked"] = checked
         save_schedule(data)
+        return jsonify({"status": "ok"})
 
-    return jsonify({"status": "ok"})
+    return jsonify({"error": "index out of range"}), 400
 
 
 # --- Main ---
