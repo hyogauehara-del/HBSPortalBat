@@ -32,13 +32,24 @@ def get_schedule():
 def add_schedule():
     name = request.form.get("name", "").strip()
     message = request.form.get("message", "").strip()
+    recipient = request.form.get("recipient", "全員").strip()
     checked = request.form.get("checked", "false").lower() == "true"
+
     if not name or not message:
         return jsonify({"error": "invalid"}), 400
+
     data = load_schedule()
-    data.append({"name": name, "message": message, "time": datetime.now().strftime("%Y/%m/%d %H:%M"), "checked": checked})
+    data.append({
+        "name": name,
+        "recipient": recipient,
+        "message": message,
+        "time": datetime.now().strftime("%Y/%m/%d %H:%M"),
+        "checked": checked
+    })
+
     save_schedule(data)
     return jsonify({"status": "ok"})
+
 
 @app.route("/update_check", methods=["POST"])
 def update_check():
