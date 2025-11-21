@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>投稿管理画面（Admin）</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .msg-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+        .delete-btn {
+            background-color: red;
+            color: white;
+            padding: 5px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>投稿管理画面（Admin）</h1>
+<button onclick="loadMessages()">投稿一覧を更新</button>
+
+<hr>
+
+<div id="msgArea"></div>
+
+<script>
+const API_BASE = "https://hbs-portal-api.onrender.com";
+
+// 投稿一覧取得
+async function loadMessages() {
+    try {
+        // server.py の /list を使用
+        const res = await fetch(`${API_BASE}/list`);
+        const data = await res.json();
+
+        const msgArea = document.getElementById("msgArea");
+        msgArea.innerHTML = "";
+
+        if (data.length === 0) {
+            msgArea.innerHTML = "<p>投稿なし</p>";
+            return;
+        }
+
+        data.forEach((msg, index) => {
+            const box = document.createElement("div");
+            box.className = "msg-box";
+
+            box.innerHTML = `
+                <p><strong>名前：</strong>${msg.name}</p>
+                <p><strong>内容：</strong>${msg.message}</p>
+                <p><strong>投稿時間：</strong>${msg.time}</p>
+                <p><strong>状態：</strong>${msg.checked ? "✅ 済" : "未"}</p>
+                <button class="delete-btn" onclick="deleteMessage(${index})">削除</button>
+            `;
+
+            msgArea.appendChild(box);
+        });
+
+    } catch (error) {
+        alert("投稿の取得に失敗しました");
+        console.error(error);
+    }
+}
+
+// 投稿削除（indexで削除）
+async function deleteMessage(index) {
+    if (!confirm("本当に削除しますか？")) return;
+
+    const formData = new FormData();
+    formData.append("index", index);
+
+    await fetch(`${API_BASE}/delete`, {
+        method: "POST",
+        body: formData
+    });
+
+    loadMessages();
+}
+
+// ページを開いたら自動で取得
+loadMessages();
+</script>
+
+</body>
+</html>
