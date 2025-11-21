@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+JST = timezone(timedelta(hours=9))
+from exchangelib import Credentials, Account, DELEGATE, Configuration, FaultTolerance
 import json
 import os
 
@@ -43,7 +45,7 @@ def add_schedule():
         "name": name,
         "recipient": recipient,
         "message": message,
-        "time": datetime.now().strftime("%Y/%m/%d %H:%M"),
+        "time": datetime.now(JST).strftime("%Y/%m/%d %H:%M"),
         "checked": checked
     })
 
@@ -61,6 +63,39 @@ def update_check():
         save_schedule(data)
         return jsonify({"status": "ok"})
     return jsonify({"error": "index out of range"}), 400
+
+# --- 未読メール取得 ---
+@app.route("/unread-mails", methods=["GET"])
+def get_unread_mails():
+    try:
+        # 環境変数または直接設定
+        EMAIL = os.environ.get("OUTLOOK_EMAIL", "your_email@awi.co.jp")
+        PASSWORD = os.environ.get("OUTLOOK_PASSWORD", "your_password")
+
+        creds = Credentials(username=EMAIL, password=PASSWORD)
+        account = Account(
+            primary_smtp_address=EMAIL,
+            credentials=creds,
+            autodiscover=True,
+            access_type=DELEGATE
+        )
+
+        # 受信トレイの未読メールを取得（最新10件）
+        unread = account.inbox.filter(is_read=False).order_by('-datetime_received')[:10]
+
+        mails = []
+        for m in unread:
+            mails.append({
+                "subject": m.subject,
+                "sender": m.sender.name if m.sender else "",
+                "received": m.datetime_received.strftime("%Y/%m/%d %H:%M")
+            })
+
+        return jsonify({"count": len(mails), "mails": mails})
+
+    except Exception as e:
+        return jsonify({"error": str(e), "count": 0, "mails": []})
+    
 
 # 管理用：一覧取得（/list）
 @app.route("/list", methods=["GET"])
